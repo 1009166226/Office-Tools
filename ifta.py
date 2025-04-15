@@ -1,6 +1,18 @@
+# pyinstaller --add-data "BlankForm/NY IRP_Schedule B.pdf:BlankForm" -F ui.py -n 妙妙工具
+
+import sys
+
 import pdfplumber
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import TextStringObject
+
+import os
+from pathlib import Path
+
+BASE_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
+
+if getattr(sys, 'frozen', False):
+    BASE_DIR = getattr(sys, '_MEIPASS', None)
 
 usa_states = [
     "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
@@ -107,7 +119,7 @@ def statistics_ifta(filenames: list,textBrowser = None):
 
 
 def fill_form(dict: dict):
-    basefile = "BlankForm/NY IRP_Schedule B.pdf"
+    basefile = os.path.join(BASE_DIR,"BlankForm/NY IRP_Schedule B.pdf")
     reader = PdfReader(open(basefile, "rb"), strict=False)
     writer = PdfWriter(clone_from=reader)
     writer.set_need_appearances_writer(True)
@@ -121,8 +133,9 @@ def fill_form(dict: dict):
         writer.pages[0], fields
     )
 
-    # write "output" to PyPDF2-output.pdf
-    with open("filled-out.pdf", "wb") as output_stream:
+    output_path = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "filled-out.pdf")
+
+    with open(output_path, "wb") as output_stream:
         writer.write(output_stream)
 
 
