@@ -1,13 +1,12 @@
-# pyinstaller --add-data "BlankForm/NY IRP_Schedule B.pdf:BlankForm" -F ui.py -n 妙妙工具
+# pyinstaller --add-data "BlankForm/NY IRP_Schedule B.pdf:BlankForm" -F -w ui.py -n 妙妙工具
 
 import sys
+from operator import index
 
 import pdfplumber
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import TextStringObject
-
 import os
-from pathlib import Path
 
 BASE_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
 
@@ -79,6 +78,14 @@ us_states = {
     "Wyoming": "WY"
 }
 
+def get_Company_Info(filename: str):
+    pdf = pdfplumber.open(filename)
+    cover_page = pdf.pages[0].extract_text()
+    company_name = cover_page[cover_page.index("Address: ") + len("Address: "):cover_page.index(" jurisdiction")]
+    president = cover_page[cover_page.index("Submitted by:") + len("Submitted by: "):]
+    pdf.close()
+
+    return [company_name,president]
 
 def extract_table(filename: str, result: dict):
     pdf = pdfplumber.open(filename)
@@ -95,13 +102,13 @@ def extract_table(filename: str, result: dict):
                 # print(state + ": " + str(mile))
                 result[state] += mile
                 total += mile
-
+    pdf.close()
     return result,total
-
 
 def statistics_ifta(filenames: list,textBrowser = None):
     result = {}
     output_text = ""
+    company_info = get_Company_Info(filenames[0])
     for filename in filenames:
         result,t = extract_table(filename, result)
         if textBrowser:
@@ -115,16 +122,19 @@ def statistics_ifta(filenames: list,textBrowser = None):
         output_text = output_text + "total: "+ str(total)+ "\n"
         textBrowser.setText(output_text)
 
-    fill_form(result)
+    fill_form(result,company_info)
 
 
-def fill_form(dict: dict):
+def fill_form(dict: dict,info):
     basefile = os.path.join(BASE_DIR,"BlankForm/NY IRP_Schedule B.pdf")
     reader = PdfReader(open(basefile, "rb"), strict=False)
     writer = PdfWriter(clone_from=reader)
     writer.set_need_appearances_writer(True)
 
-    fields = {}
+    # print(writer.get_fields())
+
+    fields = {"35 CARRIER":info[0],
+              'Name of RegistrantCarrier please print':info[1]}
 
     for key, value in dict.items():
         fields[(key)] = TextStringObject(value)
@@ -133,7 +143,7 @@ def fill_form(dict: dict):
         writer.pages[0], fields
     )
 
-    output_path = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "filled-out.pdf")
+    output_path = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), info[0]+"-IFTA filled out.pdf")
 
     with open(output_path, "wb") as output_stream:
         writer.write(output_stream)
