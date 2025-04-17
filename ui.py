@@ -1,64 +1,73 @@
-# pyside6-uic untitled.ui -o testui.py
-import sys
-from PySide6.QtWidgets import  QApplication, QMainWindow, QListWidgetItem
+# -*- coding: utf-8 -*-
 
-from testui import Ui_MainWindow
-from ifta import statistics_ifta
+################################################################################
+## Form generated from reading UI file 'untitled.ui'
+##
+## Created by: Qt User Interface Compiler version 6.9.0
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
 
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QListWidget, QListWidgetItem,
+    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
+    QStatusBar, QTextBrowser, QWidget)
 
-class Window(QMainWindow, Ui_MainWindow):
-    def __init__(self):
-        super(Window, self).__init__()
-        self.files = []  # ==> 默认文本内容
-        # 使用ui文件，导入定义的界面类
-        self.ui = Ui_MainWindow()
-        # 初始化界面
-        self.ui.setupUi(self)
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        if not MainWindow.objectName():
+            MainWindow.setObjectName(u"MainWindow")
+        MainWindow.resize(800, 600)
+        MainWindow.setAcceptDrops(True)
+        self.centralwidget = QWidget(MainWindow)
+        self.centralwidget.setObjectName(u"centralwidget")
+        self.textBrowser = QTextBrowser(self.centralwidget)
+        self.textBrowser.setObjectName(u"textBrowser")
+        self.textBrowser.setGeometry(QRect(90, 310, 641, 81))
+        self.Filling = QPushButton(self.centralwidget)
+        self.Filling.setObjectName(u"Filling")
+        self.Filling.setGeometry(QRect(170, 400, 140, 60))
+        self.Filling.setCheckable(False)
+        self.Filling.setChecked(False)
+        self.Filling.setAutoRepeat(True)
+        self.Filling.setAutoExclusive(False)
+        self.fileList = QListWidget(self.centralwidget)
+        self.fileList.setObjectName(u"fileList")
+        self.fileList.setGeometry(QRect(90, 120, 641, 192))
+        self.fileList.setAcceptDrops(False)
+        self.fileList.setDragEnabled(False)
+        self.fileList.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        self.fileList.setSelectionRectVisible(True)
+        self.Remove = QPushButton(self.centralwidget)
+        self.Remove.setObjectName(u"Remove")
+        self.Remove.setGeometry(QRect(310, 400, 140, 60))
+        self.Clear = QPushButton(self.centralwidget)
+        self.Clear.setObjectName(u"Clear")
+        self.Clear.setGeometry(QRect(450, 400, 140, 60))
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QMenuBar(MainWindow)
+        self.menubar.setObjectName(u"menubar")
+        self.menubar.setGeometry(QRect(0, 0, 800, 33))
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QStatusBar(MainWindow)
+        self.statusbar.setObjectName(u"statusbar")
+        MainWindow.setStatusBar(self.statusbar)
 
-        # 文件列表
-        self.fileList = self.ui.fileList
+        self.retranslateUi(MainWindow)
 
-        # 文字输出
-        self.textBrowser = self.ui.textBrowser
+        QMetaObject.connectSlotsByName(MainWindow)
+    # setupUi
 
-        # 填表按键
-        self.bt_Filling = self.ui.Filling
-        self.bt_Filling.clicked.connect(self.submit_iftas)
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"\u5b87\u5b50\u5999\u5999\u5de5\u5177", None))
+        self.Filling.setText(QCoreApplication.translate("MainWindow", u"Fill Form", None))
+        self.Remove.setText(QCoreApplication.translate("MainWindow", u"Remove", None))
+        self.Clear.setText(QCoreApplication.translate("MainWindow", u"Clear", None))
+    # retranslateUi
 
-        # 移除选中文件
-        self.bt_Remove = self.ui.Remove
-        self.bt_Remove.clicked.connect(self.remove_files)
-
-    def submit_iftas(self):
-        if self.files:
-            paths = [file.text() for file in self.files]
-            statistics_ifta(paths,self.textBrowser)
-        else:
-            self.ui.textBrowser.setText("There is no files!!!!")
-
-    def remove_files(self):
-        for item in self.fileList.selectedItems():
-            self.fileList.takeItem(self.fileList.row(item))
-            self.files.remove(item)
-
-    def dragEnterEvent(self, event):
-        event.accept()
-
-    # 鼠标拖入事件
-    def dropEvent(self, event):
-        urls = event.mimeData().urls()
-        for url in urls:
-            file = url.toLocalFile()  # ==> 获取文件路径
-            if file not in self.files:  # ==> 去重显示
-                item = QListWidgetItem(file)
-                self.fileList.addItem(item)
-                self.files.append(item)
-                # 鼠标放开函数事件
-                event.accept()
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = Window()
-    window.show()
-    sys.exit(app.exec())

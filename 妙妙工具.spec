@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['ui.py'],
+    ['app.py'],
     pathex=[],
     binaries=[],
     datas=[('BlankForm/NY IRP_Schedule B.pdf', 'BlankForm')],

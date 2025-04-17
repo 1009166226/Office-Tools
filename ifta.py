@@ -1,4 +1,4 @@
-# pyinstaller --add-data "BlankForm/NY IRP_Schedule B.pdf:BlankForm" -F -w ui.py -n 妙妙工具
+# pyinstaller --add-data "BlankForm/NY IRP_Schedule B.pdf:BlankForm" -F -w app.py -n 妙妙工具
 
 import sys
 from operator import index

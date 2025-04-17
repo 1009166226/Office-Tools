@@ -30,10 +30,10 @@
    <widget class="QPushButton" name="Filling">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>170</x>
       <y>400</y>
-      <width>141</width>
-      <height>61</height>
+      <width>140</width>
+      <height>60</height>
      </rect>
     </property>
     <property name="text">
@@ -68,7 +68,7 @@
      <bool>false</bool>
     </property>
     <property name="selectionMode">
-     <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+     <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
     </property>
     <property name="selectionRectVisible">
      <bool>true</bool>
@@ -77,14 +77,27 @@
    <widget class="QPushButton" name="Remove">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>310</x>
       <y>400</y>
-      <width>131</width>
-      <height>61</height>
+      <width>140</width>
+      <height>60</height>
      </rect>
     </property>
     <property name="text">
      <string>Remove</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Clear">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>400</y>
+      <width>140</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clear</string>
     </property>
    </widget>
   </widget>
