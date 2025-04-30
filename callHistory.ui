@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>458</width>
     <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>宇子弹窗</string>
+   <string>Calling Customer</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTableWidget" name="HistoryTable">
@@ -33,7 +33,7 @@
      <bool>false</bool>
     </attribute>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>255</number>
+     <number>150</number>
     </attribute>
     <column>
      <property name="text">
@@ -76,7 +76,7 @@
      </rect>
     </property>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>250</number>
+     <number>150</number>
     </attribute>
     <column>
      <property name="text">
@@ -115,7 +115,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>458</width>
      <height>33</height>
     </rect>
    </property>

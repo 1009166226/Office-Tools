@@ -15,7 +15,8 @@ class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(Window, self).__init__()
         self.auths = self.getAuth()
-        self.phone = sys.argv[1]
+        # self.phone = sys.argv[1]
+        self.phone = 9296394227
         self.ui = Ui_MainWindow()
         # 初始化界面
         self.ui.setupUi(self)
@@ -96,7 +97,7 @@ class Window(QMainWindow, Ui_MainWindow):
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
             'authorization': 'Bearer ' + self.auths['BridgeAuth'][:-1]
         }
-        print(self.auths['BridgeAuth'][:-1])
+        # print(self.auths['BridgeAuth'][:-1])
         search = self.phone
         startDate = date.today() - timedelta(days=7)
         endDate = date.today() + timedelta(days=1)
@@ -106,6 +107,7 @@ class Window(QMainWindow, Ui_MainWindow):
         response = requests.get(requestURL,headers=header)
         print(response.text)
         history = json.loads(response.text)['data']
+        print(len(history))
         if history:
             for key,value in history.items():
                 data = list(value.values())[0]

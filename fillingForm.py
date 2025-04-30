@@ -1,12 +1,12 @@
-# pyinstaller --add-data "BlankForm/NY IRP_Schedule B.pdf:BlankForm" -F -w app.py -n 妙妙工具
+# pyinstaller --add-data "BlankForm/NY IRP_Schedule B.pdf:BlankForm" --add-data "BlankForm/NY  IRP 6.pdf:BlankForm" -F -w app.py -n 妙妙工具
 
-import sys
-from operator import index
+import sys,os,pdfplumber
+from dataclasses import fields
 
-import pdfplumber
 from pypdf import PdfReader, PdfWriter
-from pypdf.generic import TextStringObject
-import os
+from pypdf.generic import TextStringObject,NameObject
+from spider import getInfo
+from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
 
@@ -122,10 +122,10 @@ def statistics_ifta(filenames: list,textBrowser = None):
         output_text = output_text + "total: "+ str(total)+ "\n"
         textBrowser.setText(output_text)
 
-    fill_form(result,company_info)
+    fill_ifta(result,company_info)
 
 
-def fill_form(dict: dict,info):
+def fill_ifta(dict: dict,info):
     basefile = os.path.join(BASE_DIR,"BlankForm/NY IRP_Schedule B.pdf")
     reader = PdfReader(open(basefile, "rb"), strict=False)
     writer = PdfWriter(clone_from=reader)
@@ -137,7 +137,7 @@ def fill_form(dict: dict,info):
               'Name of RegistrantCarrier please print':info[1]}
 
     for key, value in dict.items():
-        fields[(key)] = TextStringObject(value)
+        fields[key] = TextStringObject(value)
 
     writer.update_page_form_field_values(
         writer.pages[0], fields
@@ -149,5 +149,61 @@ def fill_form(dict: dict,info):
         writer.write(output_stream)
 
 
+def fill_IRP6(CompanyName):
+    basefile = os.path.join(BASE_DIR, "BlankForm/NY  IRP 6.pdf")
+    reader = PdfReader(open(basefile, "rb"), strict=False)
+    writer = PdfWriter(clone_from=reader)
+    writer.set_need_appearances_writer(True)
+
+    info, contact, profile = getInfo(CompanyName)
+    answers = {}
+    for ques in profile:
+        answers[ques['Question']] = ques['Answer']
+    city = info['Addr2'].split(', ')
+    state,zip = city[1].split(' ')
+    city = city[0]
+    dot = answers['USDOT / MC#']
+    if '/' in dot:
+        temp = dot.split('/')
+        dot = temp[0]
+
+    fields=writer.get_fields()
+    print(fields['fleet'])
+    fields = {'fleet':TextStringObject('001'),
+              'city':TextStringObject(city),
+              'zip code':TextStringObject(zip),
+              'contact person':TextStringObject(contact['ContactName']),
+              'area code 1':TextStringObject(info['BusPhone'][1:4]),
+              'phone':TextStringObject(info['BusPhone'][5:]),
+              'acc number':TextStringObject(answers['NY IRP ACT#']),
+              'TIN number':TextStringObject(answers['Tax ID Number / SSN']),
+              'us dot #':TextStringObject(answers['USDOT / MC#']),
+              'registrant name':TextStringObject(info['Name']),
+              'business address':TextStringObject(info['Addr1']),
+              'email address':TextStringObject(info['Email']),
+              '#5 state':TextStringObject(state)
+              }
+
+    y, m, d = datetime.today().strftime('%Y-%m-%d').split('-')
+
+    fields2 = {'applicant/business name cert':TextStringObject(info['Name']+" / "+contact['ContactName']),
+              'title (sign)':TextStringObject(contact['Title']),
+              'authorized date (month)':TextStringObject(m),
+              'authorized date (day)':TextStringObject(d),
+              'authorized date (year)': TextStringObject(y)}
+
+
+    writer.update_page_form_field_values(
+        writer.pages[0], fields
+    )
+    writer.update_page_form_field_values(
+        writer.pages[1], fields2
+    )
+
+    output_path = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])),info['Name']+" IRP filled out.pdf")
+
+    with open(output_path, "wb") as output_stream:
+        writer.write(output_stream)
+
 if __name__ == '__main__':
-    statistics_ifta(['Q3 2023.pdf', 'Q4 2023.pdf', 'Q1 2024.pdf', 'Q2 2024.pdf'])
+    fill_IRP6('Mingyou Wealthy Inc')

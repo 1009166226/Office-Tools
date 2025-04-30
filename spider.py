@@ -1,15 +1,26 @@
-import requests
-import json
+import requests, json, os, sys
 
-def getPolicyID():
+BASE_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
 
-    auth = "900BAAE5ABBAC534E3B41888F3154998A959BCD0872B3AA6032433F129F81951A5A31D18DACAD7B6F5C2B38C8D21497FED049FB276638E02D02C5195770283A45CA7DA25CFB82B8DC8E7E04BCC5A3CD55456D48672C1E6F7FD86AC17B3AFF25E0DAE420A16FF907C03E36C8FCD67E7259D75ECA377E18F75F58204FACF63C4143600E6F7B309839075A782D24CE860B55118087A211DE2C311B32E6AD1562D616F71370BB05C27CF1B73C0C9B2D632E8F3A7D074CCF1EC13C675955329C5DAD16606E28E14153B9BCEEA921D4CE35F277281AD447EB49A0490CFDEC54FAE16BFA910F2E66763B9133BEB5292C518FFE48A2D9D65B0405EB766FDC8B62AC9A5AB4226BD17059D119FADD7AF3289B429681576ACA508C51222BD44A70CAEB7A7EA80CAE5F6FB4864B9BFF772F170439DFB289EDF9C0C6CDFEE042A8C57F4639AED25EA6F436AB5F96BFEE4503D6F2485FE35757E7AE4DACD4A5520D7135E3FB40CB9746FB54F2C2B96A5E1E035F173105EE71D14E7AAD44559A2B26CCBA00D09A90E0AF59784193246CBA5F3675E9E334C7B8B7F9C88EF46813B96D9AECF9A3A5C7965155562CE21D81F3EC2EB649B2AB9CD98167A8E07AA7DA2F3C6023C8F87C8F494B898273A767E0CF3663ED8E06CC933746AFC628B08088E997582F298AC0D5E1DAE7AC5EAACE2D2CFEC311D10C7FE4BE079F69EBD4413EA6DBBBD6649C52A8C3570ACB4829E843B3862165B7F2C70749CEFA4E4F23AD4FF129B64D56C64A42D817AED99B47C480246C57030518A40633C55637B9CFC708740ECE3CAF170D5EC88C95802E582328F5936523EEB79E6CD56FAB949EAAE08CA0BB7EB1991CD3FC167AB1C6FDF64627E4B5C7E58192E8F1E62BD50B104F853DF16B4307D977650852F15A2"
+def getAuth():
+    # print(BASE_DIR)
+    auths = {}
+    with open(BASE_DIR + "\Auth.txt", 'r') as f:
+        for a in f:
+            auth = a.split('=')
+            auths[auth[0]] = auth[1]
+    # print(auths)
+    return auths
+
+def getPolicyID(companyName):
+    auths = getAuth()
+    # print(auths)
     header = {
         'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
-        'Cookie':'SPIDERAUTH='+auth
+        'Cookie':'SPIDERAUTH='+auths['AMSauth']
     }
     data ={
-        "SearchText": "Didi Logistics Inc",
+        "SearchText": companyName,
         "MaximumRecords": 100,
         "SearchBy": "N",
         "SearchByMoreSelection": "",
@@ -39,12 +50,29 @@ def getPolicyID():
     }
 
     x = requests.post('https://www.ams360.com/v2414571/NextGen/Customer/GetGridData',headers=header,data=data)
-    print(x.text)
+    # print(x.text)
     policy_list = json.loads(x.text)['CustomerList']
-    print(policy_list)
+    # print(policy_list)
     for policy in policy_list:
-        if policy['Name'] == "Didi Logistics Inc":
+        if policy["Name"] == companyName:
             return policy['CustId']
 
+def getInfo(companyName):
+    auths = getAuth()
+    header = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
+        'Cookie': 'SPIDERAUTH=' + auths['AMSauth']
+    }
+    data = {
+        "id":getPolicyID(companyName)
+    }
+    x = requests.post('https://www.ams360.com/v2414571/NextGen/Customer/CustomerOverview', headers=header, data=data)
+    info = x.text[x.text.index("overviewList:")+len("overviewList:"):x.text.index("PageHelp")-19]
+    info = json.loads(info)
+    # print(info["customerOverviewInfo"])
+    # print(info["customerContactInfoModelList"][0])
+    # print(info["customerProfiles"][0])
+    return info["customerOverviewInfo"],info["customerContactInfoModelList"][0],info["customerProfiles"]
+
 if __name__ == '__main__':
-    print(getPolicyID())
+    getInfo("JKL Trucking Inc")

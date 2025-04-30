@@ -10,6 +10,11 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
+  </property>
   <property name="acceptDrops">
    <bool>true</bool>
   </property>
@@ -20,24 +25,24 @@
    <widget class="QTextBrowser" name="textBrowser">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>310</y>
+      <x>80</x>
+      <y>200</y>
       <width>641</width>
       <height>81</height>
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="Filling">
+   <widget class="QPushButton" name="IFTA">
     <property name="geometry">
      <rect>
       <x>170</x>
-      <y>400</y>
+      <y>280</y>
       <width>140</width>
       <height>60</height>
      </rect>
     </property>
     <property name="text">
-     <string>Fill Form</string>
+     <string>Fill IFTA</string>
     </property>
     <property name="checkable">
      <bool>false</bool>
@@ -55,8 +60,8 @@
    <widget class="QListWidget" name="fileList">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>120</y>
+      <x>80</x>
+      <y>10</y>
       <width>641</width>
       <height>192</height>
      </rect>
@@ -78,7 +83,7 @@
     <property name="geometry">
      <rect>
       <x>310</x>
-      <y>400</y>
+      <y>280</y>
       <width>140</width>
       <height>60</height>
      </rect>
@@ -91,13 +96,39 @@
     <property name="geometry">
      <rect>
       <x>450</x>
-      <y>400</y>
+      <y>280</y>
       <width>140</width>
       <height>60</height>
      </rect>
     </property>
     <property name="text">
      <string>Clear</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="IRP6">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>390</y>
+      <width>121</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Fill IRP6</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="Company">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>350</y>
+      <width>641</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="placeholderText">
+     <string>请输入公司名字</string>
     </property>
    </widget>
   </widget>

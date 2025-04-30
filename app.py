@@ -3,7 +3,8 @@ import sys
 from PySide6.QtWidgets import  QApplication, QMainWindow, QListWidgetItem
 
 from ui import Ui_MainWindow
-from ifta import statistics_ifta
+from fillingForm import statistics_ifta,fill_IRP6
+from spider import getInfo
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -22,8 +23,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.textBrowser = self.ui.textBrowser
 
         # 填表按键
-        self.bt_Filling = self.ui.Filling
-        self.bt_Filling.clicked.connect(self.submit_iftas)
+        self.bt_IFTA = self.ui.IFTA
+        self.bt_IFTA.clicked.connect(self.submit_iftas)
 
         # 移除选中文件
         self.bt_Remove = self.ui.Remove
@@ -33,12 +34,20 @@ class Window(QMainWindow, Ui_MainWindow):
         self.bt_Clear = self.ui.Clear
         self.bt_Clear.clicked.connect(self.clearAll)
 
+        # 填IRP6
+        self.bt_IRP6 = self.ui.IRP6
+        self.bt_IRP6.clicked.connect(self.fill_IRP6)
+
     def submit_iftas(self):
         if self.files:
             paths = [file.text() for file in self.files]
             statistics_ifta(paths,self.textBrowser)
         else:
             self.ui.textBrowser.setText("There is no files!!!!")
+
+    def fill_IRP6(self):
+        company = self.ui.Company.toPlainText()
+        fill_IRP6(company)
 
     def remove_files(self):
         for item in self.fileList.selectedItems():

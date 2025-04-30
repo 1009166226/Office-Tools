@@ -23,7 +23,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(458, 600)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.HistoryTable = QTableWidget(self.centralwidget)
@@ -45,7 +45,7 @@ class Ui_MainWindow(object):
         self.HistoryTable.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.HistoryTable.setAutoFillBackground(False)
         self.HistoryTable.horizontalHeader().setCascadingSectionResizes(False)
-        self.HistoryTable.horizontalHeader().setDefaultSectionSize(255)
+        self.HistoryTable.horizontalHeader().setDefaultSectionSize(150)
         self.PolicyTable = QTableWidget(self.centralwidget)
         if (self.PolicyTable.columnCount() < 3):
             self.PolicyTable.setColumnCount(3)
@@ -60,11 +60,11 @@ class Ui_MainWindow(object):
         self.PolicyTable.setHorizontalHeaderItem(2, __qtablewidgetitem5)
         self.PolicyTable.setObjectName(u"PolicyTable")
         self.PolicyTable.setGeometry(QRect(10, 290, 771, 251))
-        self.PolicyTable.horizontalHeader().setDefaultSectionSize(250)
+        self.PolicyTable.horizontalHeader().setDefaultSectionSize(150)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 800, 33))
+        self.menubar.setGeometry(QRect(0, 0, 458, 33))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -76,7 +76,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"\u5b87\u5b50\u5f39\u7a97", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Calling Customer", None))
         ___qtablewidgetitem = self.HistoryTable.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"From", None));
         ___qtablewidgetitem1 = self.HistoryTable.horizontalHeaderItem(1)
